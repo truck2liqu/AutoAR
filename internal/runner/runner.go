@@ -30,11 +30,13 @@ type Runner struct {
 }
 
 // New creates a new Runner with the given config.
+// Note: using Concurrency*4 for buffer size to reduce blocking when
+// tasks are submitted in bursts (original *2 felt too tight in practice).
 func New(cfg *config.Config) *Runner {
 	return &Runner{
 		cfg:     cfg,
-		tasks:   make(chan Task, cfg.Concurrency*2),
-		results: make(chan Result, cfg.Concurrency*2),
+		tasks:   make(chan Task, cfg.Concurrency*4),
+		results: make(chan Result, cfg.Concurrency*4),
 	}
 }
 
