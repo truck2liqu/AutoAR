@@ -36,10 +36,20 @@ for res := range r.Results() {
 ## Configuration
 
 | Field         | Source                  | Description                        |
-|---------------|-------------------------|------------------------------------|
-| `Concurrency` | `config.Config` / `CONCURRENCY` env | Number of parallel workers |
+|---------------|-------------------------|---------------------------------|
+| `Concurrency` | `config.Config` / `CONCURRENCY` env | Number of parallel workers (default: 5) |
+
+> **Personal note:** I've found that setting `CONCURRENCY=10` works well on my
+> machine for most recon workloads without hammering rate limits. Adjust down
+> to 3–5 if you start seeing timeouts from external tools.
 
 ## Extending
 
 Replace the `execute` function body in `runner.go` with real tool invocations
 (e.g. `subfinder`, `nmap`) to integrate external recon tools.
+
+### Tools I plan to integrate
+
+- `subfinder` – passive subdomain enumeration
+- `httpx` – HTTP probing
+- `nuclei` – vulnerability scanning (run last, after scope is confirmed)
