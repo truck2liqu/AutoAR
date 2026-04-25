@@ -44,6 +44,10 @@ WORKDIR /app
 # --- Runtime stage: minimal Debian image ---
 FROM debian:bookworm-slim
 
+# Using a fixed jadx version (1.4.3) instead of 1.5.0 — 1.5.0 had occasional
+# OOM crashes on large APKs in my testing; 1.4.3 is stable for my use cases.
+ENV JADX_VERSION="1.4.3"
+
 ENV AUTOAR_SCRIPT_PATH=/usr/local/bin/autoar \
     AUTOAR_CONFIG_FILE=/app/autoar.yaml \
     AUTOAR_RESULTS_DIR=/app/new-results
@@ -59,9 +63,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install jadx decompiler for apkX analysis
-# NOTE: pinning to 1.5.0 for improved Kotlin decompilation support (tested locally)
+# Pinned to 1.4.3 for stability — see ENV declaration above
 RUN set -eux; \
-    JADX_VERSION="1.5.0"; \
     curl -L "https://github.com/skylot/jadx/releases/download/v${JADX_VERSION}/jadx-${JADX_VERSION}.zip" -o /tmp/jadx.zip; \
     mkdir -p /opt/jadx; \
     unzip -q /tmp/jadx.zip -d /opt/jadx; \
@@ -73,7 +76,4 @@ RUN set -eux; \
 RUN set -eux; \
     APKTOOL_VERSION="2.9.3"; \
     curl -L "https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_${APKTOOL_VERSION}.jar" -o /usr/local/bin/apktool.jar; \
-    echo '#!/bin/sh\njava -jar /usr/local/bin/apktool.jar "$@"' > /usr/local/bin/apktool; \
-    chmod +x /usr/local/bin/apktool
-
-# Install uber-apk-signer 
+    echo '#!/bin/sh\njava -jar /usr/local/bin/apktool.jar "$@"' > /usr/
