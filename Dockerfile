@@ -52,6 +52,10 @@ ENV AUTOAR_SCRIPT_PATH=/usr/local/bin/autoar \
     AUTOAR_CONFIG_FILE=/app/autoar.yaml \
     AUTOAR_RESULTS_DIR=/app/new-results
 
+# Set a default timezone so timestamps in logs/results are consistent.
+# Change this to your local timezone if needed (e.g. America/New_York).
+ENV TZ=UTC
+
 WORKDIR /app
 
 # System deps for runtime and common tools (including Java + unzip for jadx and apktool)
@@ -60,6 +64,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client docker.io \
     openjdk-17-jre-headless unzip \
     python3 python3-pip sqlmap nmap \
+    tzdata \
     && rm -rf /var/lib/apt/lists/*
 
 # Install jadx decompiler for apkX analysis
@@ -75,5 +80,4 @@ RUN set -eux; \
 # Install apktool for MITM patching (decode/encode APKs)
 RUN set -eux; \
     APKTOOL_VERSION="2.9.3"; \
-    curl -L "https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_${APKTOOL_VERSION}.jar" -o /usr/local/bin/apktool.jar; \
-    echo '#!/bin/sh\njava -jar /usr/local/bin/apktool.jar "$@"' > /usr/
+    curl -L "https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_
