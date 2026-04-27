@@ -36,12 +36,16 @@ for res := range r.Results() {
 ## Configuration
 
 | Field         | Source                  | Description                        |
-|---------------|-------------------------|---------------------------------|
+|---------------|-------------------------|-------------------------------------|
 | `Concurrency` | `config.Config` / `CONCURRENCY` env | Number of parallel workers (default: 5) |
 
 > **Personal note:** I've found that setting `CONCURRENCY=10` works well on my
 > machine for most recon workloads without hammering rate limits. Adjust down
 > to 3–5 if you start seeing timeouts from external tools.
+>
+> On my home lab (8-core machine, ~100Mbps uplink) I've settled on `CONCURRENCY=8`
+> as a sweet spot — fast enough to feel snappy, conservative enough that nuclei
+> doesn't get rate-limited by most bug bounty targets.
 
 ## Extending
 
@@ -53,3 +57,4 @@ Replace the `execute` function body in `runner.go` with real tool invocations
 - `subfinder` – passive subdomain enumeration
 - `httpx` – HTTP probing
 - `nuclei` – vulnerability scanning (run last, after scope is confirmed)
+- `katana` – crawling / JS endpoint discovery (added to my list after finding it useful on a recent program)
