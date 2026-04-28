@@ -54,7 +54,8 @@ ENV AUTOAR_SCRIPT_PATH=/usr/local/bin/autoar \
 
 # Set a default timezone so timestamps in logs/results are consistent.
 # Change this to your local timezone if needed (e.g. America/New_York).
-ENV TZ=UTC
+# Personal note: I'm in Europe/Berlin, so overriding UTC here for local use.
+ENV TZ=Europe/Berlin
 
 WORKDIR /app
 
@@ -77,7 +78,4 @@ RUN set -eux; \
     ln -sf /opt/jadx/bin/jadx-gui /usr/local/bin/jadx-gui || true; \
     rm /tmp/jadx.zip
 
-# Install apktool for MITM patching (decode/encode APKs)
-RUN set -eux; \
-    APKTOOL_VERSION="2.9.3"; \
-    curl -L "https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_
+# Install
